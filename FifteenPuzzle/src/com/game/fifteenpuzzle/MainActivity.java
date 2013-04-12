@@ -9,11 +9,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -22,12 +24,10 @@ import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Toast;
-import android.view.View.OnTouchListener;
-import android.content.Intent;
-public class MainActivity extends Activity implements OnTouchListener{//,SensorEventListener{
+
+import android.widget.ImageView;
+
+public class MainActivity extends Activity{//,SensorEventListener{
 
 	//private Numbers num;
 	private SensorManager sensorManager;
@@ -55,7 +55,16 @@ public class MainActivity extends Activity implements OnTouchListener{//,SensorE
 	//current resolution of the screen
 	public static int currentWidth_X;
 	public static int currentHeight_Y;
-		
+	
+	
+	public Bitmap imgNum;
+	ImageView image;
+	AnimationDrawable animation; 
+	
+	
+	private SensorManager mSensorManager;
+	private ShakeEventListener mSensorListener; 
+	  
 	int[] mBmpArray = { R.drawable.num16blank,R.drawable.num1, R.drawable.num2,
             R.drawable.num3, R.drawable.num4, R.drawable.num5,
             R.drawable.num6, R.drawable.num7,
@@ -63,90 +72,36 @@ public class MainActivity extends Activity implements OnTouchListener{//,SensorE
             R.drawable.num11, R.drawable.num12,
             R.drawable.num13, R.drawable.num14,R.drawable.num15
 	};
+	
 
 	@Override
 		protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mContext = getApplicationContext();
-		game15puzzle = new gameField();
+		final GameView gv = new GameView(this);
 		
+		mContext = getApplicationContext();
 		setDefaultScreen(defaultRes_X,defaultRes_Y);
 		
 		//load the bmps
 		for (int i = 0; i < 15; i++) {
 			myBmp[i] = new BmpSettings(mContext.getResources(),mBmpArray[i]);
-		
 			
-	        // Retrieve the SensorManager. 
-	       // sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-	        //Retrieve the default Sensor for the gyroscope.
-	        //Sensor sensorGyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-	        //Register this activity as the listener for gyroscope events.
-	        //sensorManager.registerListener(this, sensorGyroscope, SensorManager.SENSOR_DELAY_NORMAL);
 			
-		/*
-         * Create an instance of an anonymous class whose base class is
-         * android.view.View and whose method onDraw() is overridden.
-         */
-        View rootView = new View(this) {
-
-        
-            @Override
-            protected void onDraw(Canvas canvas) {
-                super.onDraw(canvas);
-                
-      
-                Paint p = new Paint();
-                p.setAntiAlias(false);
-                p.setColor(Color.argb(255, 255, 0, 0));
-                
-                if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) 
-                {
-                	x_pos = x_InitPos;
-                    y_pos = y_InitPos;
-                    canvas.drawRect(110, 230, 640, 760, p);
-                    //canvas.drawRect(111, 232, 5*(myBmp[0].getWidth()+10), 7*(myBmp[0].getHeight()-1), p);
-                    //d = getResources().getDrawable(R.drawable.start);
-                    //d.setBounds(400,230 ,120, 120);
-                    //canvas.drawRect(110, 770, 610, 850, p);
-                    //p.setColor(Color.argb(0, 255, 0, 0));
-                    //canvas.drawText("shake to start", 120, 780, p);
-                    
-                } 
-                else 
-                    {
-                	x_pos = x_InitPosLand;
-                    y_pos = y_InitPosLand;
-                    canvas.drawRect(350, 40, 880, 570, p);    
-                }	
-                
-                 
-                for (int i = 0; i < 4; i++) {
-        			for (int j = 0; j < 4; j++) {
-        				
-        				d = getResources().getDrawable(mBmpArray[game15puzzle.getFieldNumber(i, j)]);
-        				d.setBounds(x_pos,y_pos ,x_pos+myBmp[0].getWidth()+10, y_pos+myBmp[0].getWidth()+10);
-        				y_pos=y_pos+myBmp[0].getWidth()+10;
-        				d.draw(canvas);
-        				
-        			}
-        			x_pos=x_pos+myBmp[0].getWidth()+10;
-        			if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){ 
-        			 y_pos=y_InitPos;
-                    }
-        			else
-        				y_pos=y_InitPosLand;
-        			
-        			d.draw(canvas);
-                }
-            }
-
-        };
-        
-		setContentView(rootView);
-		rootView.setOnTouchListener(this);
+		setContentView(gv);
+		 mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		 mSensorListener = new ShakeEventListener();   
 	}
+	mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
+
+		      public void onShake() {
+		    	  gv.ShakeField();
+		    	  gv.postInvalidate();
+		      }
+		    });
 }
+	
+	
+	 
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -193,7 +148,7 @@ public class MainActivity extends Activity implements OnTouchListener{//,SensorE
 	}
 	
 	//the dialog message by winning the game
-	public void gameOverMsgOnScreen() {
+	/*public void gameOverMsgOnScreen() {
 		 AlertDialog.Builder ad = new AlertDialog.Builder(this);
 		 ad.setTitle("15 Puzzle Game");
 		 ad.setMessage("Congatulations !!!");
@@ -213,17 +168,50 @@ public class MainActivity extends Activity implements OnTouchListener{//,SensorE
 			  finish();
 		  }});
 		 ad.show();
-	}
+	}*/
 
 	
-	@Override
+	/*@Override
     public boolean onTouch(View v, MotionEvent event) {
 		 
-		//gameOverMsgOnScreen();
+		TranslateAnimation mAnimation = new TranslateAnimation(0,0,0,200);
+	    mAnimation.setDuration(500);
+	    mAnimation.setFillAfter(true);
+	    mAnimation.setRepeatCount(-1);
+	    mAnimation.setRepeatMode(Animation.RELATIVE_TO_SELF);
+	    int move[] = new int[4];
+	    int pos[] = new int[2];
+	    
+	    animation = new AnimationDrawable();
+	
+	   //gameOverMsgOnScreen();
 			if (event.getAction() == MotionEvent.ACTION_DOWN) {
 				if(event.getX() >= x_InitPos && event.getY() <= y_InitPos+(4*myBmp[0].getWidth())){
-					game15puzzle.moveRect(ScreenToField_X((int)event.getX()),ScreenToField_Y((int) event.getY()));
-							v.postInvalidate();
+					if(game15puzzle.moveRect(ScreenToField_X((int)event.getX()),ScreenToField_Y((int) event.getY())) == true){
+							move = game15puzzle.getMoveRectArray();
+							pos = game15puzzle.getFieldPosition(move[0]);
+							
+							int i=0;
+							String imgName;
+							while(move[i]!=-1){
+								imgName = "num" + move[i];
+								if(move[i]==0)
+									 imgName = "num16blank";
+						        int id = getResources().getIdentifier(imgName, "drawable", getPackageName());
+						        animation.addFrame(getResources().getDrawable(id), 1000);
+						        i++;
+						        if(move[i]==0)
+									break;
+							}
+							
+							if(v.getId() == image.getId()) {
+						        image.setBackgroundDrawable(animation);
+						        animation.setVisible(true, true);
+						        animation.stop();
+						        animation.start();
+						    }
+					        v.invalidate();
+					}
 							if(game15puzzle.IfGameOver()==true)
 							{
 								gameOverMsgOnScreen();
@@ -231,7 +219,7 @@ public class MainActivity extends Activity implements OnTouchListener{//,SensorE
 				}
 			}
 			return true;
-		}
+		}*/
 
 	
 	/*
@@ -303,5 +291,17 @@ public class MainActivity extends Activity implements OnTouchListener{//,SensorE
         sensorManager.unregisterListener(this);
         super.onStop();
     }*/
+	@Override
+	  protected void onResume() {
+	    super.onResume();
+	    mSensorManager.registerListener(mSensorListener,
+	        mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+	        SensorManager.SENSOR_DELAY_NORMAL);
+	  }
 
+	  @Override
+	  protected void onPause() {
+	    mSensorManager.unregisterListener(mSensorListener);
+	    super.onStop();
+	  }
 }//end of class
