@@ -13,14 +13,17 @@ import android.graphics.Paint;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.BounceInterpolator;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import java.lang.Thread;
+//import android.view.View;
+//import android.view.animation.Animation;
+//import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
-import android.app.AlertDialog;
+//import android.widget.ImageView;
+//import android.app.AlertDialog;
 
-public class GameView extends View {
+public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
 	
 	Context mContext;
@@ -34,6 +37,9 @@ public class GameView extends View {
 	int _currentX;
 	int _currentY;
 	AnimationDrawable animation;
+	SurfaceHolder mSurfaceHolder;
+	GameViewThread mGVThread;
+	public int movedFieldsArray[] = new int[]{-1,-1,-1,-1};
 	
 	//the R.drawable for all images  
 	int[] mBmpArray = { R.drawable.num16blank,R.drawable.num1, R.drawable.num2,
@@ -55,8 +61,41 @@ public class GameView extends View {
 		  for (int i = 0; i < 15; i++) {
 			 myBmp[i] = new BmpSettings(mContext.getResources(),mBmpArray[i]);
 		  }
+		  mSurfaceHolder =getHolder();
+		  mSurfaceHolder.addCallback(this);
+		  
 	   }
 
+	   @Override
+	    public void surfaceCreated(SurfaceHolder holder) {
+	        // TODO Auto-generated method stub
+	    	mGVThread = new GameViewThread(holder,this);
+	    	mGVThread.setRunning(true);
+	    	mGVThread.start();
+	    }
+	   
+	   @Override
+	    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+	        // TODO Auto-generated method stub
+	    }
+
+	   
+
+	    @Override
+	    public void surfaceDestroyed(SurfaceHolder holder) {
+	        // TODO Auto-generated method stub
+	    	boolean retry = true;
+	    	mGVThread.setRunning(false);
+	        while (retry) {
+	            try {
+	            	mGVThread.join();
+	                retry = false;
+	            } catch (InterruptedException e) {
+	            }
+	        }
+	        }
+	   
+	  
 	   @Override
 	     protected void onDraw(Canvas canvas) {
 	         super.onDraw(canvas);
@@ -98,12 +137,7 @@ public class GameView extends View {
 	 			else
 	 				y_pos=y_InitPosLand;
 	 				d.draw(canvas);
-	         }//outer for 
-	         
-	        
-	         
-	         
-	        
+	         }//outer for 	        
 	     }//onDraw
 
 	   
@@ -170,6 +204,11 @@ public class GameView extends View {
 			game15puzzle.CreateRandomField();
 		}
 		
+		public int[] getMovedFieldsArray() {
+			   return movedFieldsArray;
+		}
+		
+		
 	   /**
 		* The function that called upon tough screen event 
 		* @param event - motion event
@@ -178,12 +217,12 @@ public class GameView extends View {
 	   @Override
 	    public boolean onTouchEvent(MotionEvent event) {
 			 
-			TranslateAnimation mAnimation = new TranslateAnimation(0,0,0,200);
-		    mAnimation.setDuration(500);
-		    mAnimation.setFillAfter(true);
-		    mAnimation.setRepeatCount(-1);
-		    mAnimation.setRepeatMode(Animation.RELATIVE_TO_SELF);
-		    int move[] = new int[4];
+			//TranslateAnimation mAnimation = new TranslateAnimation(0,0,0,200);
+		    //mAnimation.setDuration(500);
+		    //mAnimation.setFillAfter(true);
+		    //mAnimation.setRepeatCount(-1);
+		   // mAnimation.setRepeatMode(Animation.RELATIVE_TO_SELF);
+		    //int move[] = new int[4];
 		    int pos[] = new int[2];
 		    int pos1[] = new int[2];
 		    int i=0;
@@ -197,18 +236,18 @@ public class GameView extends View {
 						if(game15puzzle.moveRect(ScreenToField_X((int)event.getX()),ScreenToField_Y((int) event.getY())) == true){
 							_currentX = (int)event.getX();
 						    _currentY = (int)event.getY();
-								move = game15puzzle.getMoveRectArray();
-								pos = game15puzzle.getFieldPosition(move[0]);
-								pos1 = game15puzzle.getFieldPosition(move[1]);
+						    	movedFieldsArray = game15puzzle.getMoveRectArray();
+								pos = game15puzzle.getFieldPosition(movedFieldsArray[0]);
+								pos1 = game15puzzle.getFieldPosition(movedFieldsArray[1]);
 								
-								while(move[i]!=-1){
-									imgName = "num" + move[i];
-									if(move[i]==0)
+								while(movedFieldsArray[i]!=-1){
+									imgName = "num" + movedFieldsArray[i];
+									if(movedFieldsArray[i]==0)
 										 imgName = "num16blank";
 							       // int id = getResources().getIdentifier(imgName, "drawable", getPackageName());
 							       // animation.addFrame(getResources().getDrawable(id), 1000);
 							        i++;
-							        if(move[i]==0)
+							        if(movedFieldsArray[i]==0)
 										break;
 								}
 									/*if(pos[0]==pos1[0]){//x same
