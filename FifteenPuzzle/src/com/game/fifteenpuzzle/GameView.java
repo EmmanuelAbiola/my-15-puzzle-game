@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -28,48 +29,47 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	
 	Context mContext;
 	Canvas mCanvas;
-	Drawable d;
 	int x_pos=120,y_pos=240;
 	int x_InitPos=120,y_InitPos=240;
 	int x_InitPosLand=360,y_InitPosLand=50;
 	gameField game15puzzle;
 	BmpSettings myBmp[] = new BmpSettings[15];
-	int _currentX;
-	int _currentY;
-	AnimationDrawable animation;
 	SurfaceHolder mSurfaceHolder;
 	GameViewThread mGVThread;
 	public int movedFieldsArray[] = new int[]{-1,-1,-1,-1};
+	Bitmap bmpNumbers[] = new Bitmap[16];
+	int mBmpWidth;
 	
 	//the R.drawable for all images  
-	int[] mBmpArray = { R.drawable.num16blank,R.drawable.num1, R.drawable.num2,
+	/*int[] mBmpArray = { R.drawable.num16blank,R.drawable.num1, R.drawable.num2,
             R.drawable.num3, R.drawable.num4, R.drawable.num5,
             R.drawable.num6, R.drawable.num7,
             R.drawable.num8, R.drawable.num9, R.drawable.num10,
             R.drawable.num11, R.drawable.num12,
             R.drawable.num13, R.drawable.num14,R.drawable.num15
-	};
+	};*/
 	
 	//Constructor
-	   public GameView(Context context) {
+	   public GameView(Context context,Bitmap[] bmpNumbers) {
 	      super(context);
 	      mContext = context;
 	      if(game15puzzle ==null){
 	    	  game15puzzle = new gameField();
 	      }
 	      //load the bmps
-		  for (int i = 0; i < 15; i++) {
+		 /* for (int i = 0; i < 15; i++) {
 			 myBmp[i] = new BmpSettings(mContext.getResources(),mBmpArray[i]);
-		  }
+		  }*/
+		  
 		  mSurfaceHolder =getHolder();
 		  mSurfaceHolder.addCallback(this);
-		  
+		  this.bmpNumbers = bmpNumbers;
 	   }
-
+	 
 	   @Override
 	    public void surfaceCreated(SurfaceHolder holder) {
 	        // TODO Auto-generated method stub
-	    	mGVThread = new GameViewThread(holder,this);
+	    	mGVThread = new GameViewThread(holder,this,bmpNumbers);
 	    	mGVThread.setRunning(true);
 	    	mGVThread.start();
 	    }
@@ -91,12 +91,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	            	mGVThread.join();
 	                retry = false;
 	            } catch (InterruptedException e) {
+	            	Log.v("Exception Occured", e.getMessage());
 	            }
 	        }
 	        }
-	   
 	  
-	   @Override
+	    
+	  /* @Override
 	     protected void onDraw(Canvas canvas) {
 	         super.onDraw(canvas);
 	         mCanvas = canvas;
@@ -139,7 +140,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	 				d.draw(canvas);
 	         }//outer for 	        
 	     }//onDraw
-
+*/
 	   
 	   /**
 		 * The dialog that appears at the end of the game
@@ -178,7 +179,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			}
 			else
 				x = x - x_InitPosLand;
-			x = x / myBmp[0].getWidth();
+			x = x / bmpNumbers[0].getWidth();
 			return x;
 		}
 	   /**
@@ -192,7 +193,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			}
 			else
 				y = y - y_InitPosLand;
-			y = y / myBmp[0].getWidth();
+			y = y / bmpNumbers[0].getWidth();
 			return y;
 		}
 	   
@@ -217,72 +218,18 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	   @Override
 	    public boolean onTouchEvent(MotionEvent event) {
 			 
-			//TranslateAnimation mAnimation = new TranslateAnimation(0,0,0,200);
-		    //mAnimation.setDuration(500);
-		    //mAnimation.setFillAfter(true);
-		    //mAnimation.setRepeatCount(-1);
-		   // mAnimation.setRepeatMode(Animation.RELATIVE_TO_SELF);
-		    //int move[] = new int[4];
-		    int pos[] = new int[2];
-		    int pos1[] = new int[2];
-		    int i=0;
-			String imgName;
-		    
-			animation = new AnimationDrawable();
-		
-		   //gameOverMsgOnScreen();
+			int i=0;
+			
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					if(event.getX() >= x_InitPos && event.getY() <= y_InitPos+(4*myBmp[0].getWidth())){
+					if(event.getX() >= x_InitPos && event.getY() <= y_InitPos+(4*bmpNumbers[0].getWidth())){
 						if(game15puzzle.moveRect(ScreenToField_X((int)event.getX()),ScreenToField_Y((int) event.getY())) == true){
-							_currentX = (int)event.getX();
-						    _currentY = (int)event.getY();
-						    	movedFieldsArray = game15puzzle.getMoveRectArray();
-								pos = game15puzzle.getFieldPosition(movedFieldsArray[0]);
-								pos1 = game15puzzle.getFieldPosition(movedFieldsArray[1]);
-								
-								while(movedFieldsArray[i]!=-1){
-									imgName = "num" + movedFieldsArray[i];
-									if(movedFieldsArray[i]==0)
-										 imgName = "num16blank";
-							       // int id = getResources().getIdentifier(imgName, "drawable", getPackageName());
-							       // animation.addFrame(getResources().getDrawable(id), 1000);
-							        i++;
-							        if(movedFieldsArray[i]==0)
-										break;
-								}
-									/*if(pos[0]==pos1[0]){//x same
-										Paint p = new Paint();
-								         p.setAntiAlias(false);
-								         p.setColor(Color.argb(255, 255, 255, 0));
-										 mCanvas.drawRect(350, 40, 880, 570,p );
-										
-										
-										
-									}*/
-								//if(v.getId() == image.getId()) {
-							     //   image.setBackgroundDrawable(animation);
-							    //    animation.setVisible(true, true);
-							    //    animation.stop();
-							    //    animation.start();
-							   // }
-									
-									//AnimationDrawable animation = new AnimationDrawable();
-
-							/*		TranslateAnimation _tAnim = new TranslateAnimation(-50, 0, 0, 0);
-								    _tAnim.setInterpolator(new BounceInterpolator());
-								    _tAnim.setDuration(1000);
-								 
-								    startAnimation(_tAnim);	
-									
-									
-								*/
-									
-						        invalidate();
+						    movedFieldsArray = game15puzzle.getMoveRectArray();						
+							invalidate();
 						}
-								if(game15puzzle.IfGameOver()==true)
-								{
-									gameOverMsgOnScreen();
-								}
+						if(game15puzzle.IfGameOver()==true)
+						{
+							gameOverMsgOnScreen();
+						}
 					}
 				}
 				return true;
