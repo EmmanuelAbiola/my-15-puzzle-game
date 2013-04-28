@@ -112,6 +112,9 @@ public boolean moveRect(int x, int y) {
 	int move=0;
 	cleanMoveRectArray();
 	
+	if(x >= 4 || y >=4)
+		return false;
+	
 	//look for an empty field position
 	for (int i = 0; i < 4; i++) {
 		for (int j = 0; j < 4; j++) {
