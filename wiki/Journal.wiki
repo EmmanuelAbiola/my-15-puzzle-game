@@ -39,17 +39,17 @@ Lesson Learned:
  *	The starting a new game after game over should first close the current activity and then open the new game through intent.
  *	The Gyroscope data should be filtered.
 Planned next week.
-Gyroscope data evaluation, animation of the changing images. 
+ Gyroscope data evaluation, animation of the changing images. 
 
 === March 28- April 4 ===
 
 Implementation of low pass filter of the gyroscope data.
 
 Problems:
-How to redraw the canvas after gyroscope evaluation. 
+ How to redraw the canvas after gyroscope evaluation. 
 
 Planned next week.
-Animation of the changing images. 
+ Animation of the changing images. 
 
 
 === April 4 – April 11 ===
@@ -60,11 +60,11 @@ Implemented the “shake” event.
 
 
 Problems:
-Tried to use the Translate Animation and frame animation. Both were not a good fit for the application. TranslateAnimation from the onTouchEvent eventually created the animation however for the all canvas and not the specific number.
+ Tried to use the Translate Animation and frame animation. Both were not a good fit for the application. TranslateAnimation from the onTouchEvent eventually created the animation however for the all canvas and not the specific number.
 In the shake implementation was hard to understand the accelerometer logic callback function and how to filter the noise and connect the module to activity.
 
 Lesson Learned:
-Better not to use frameAnimation and Translate Animation to implement different non-sequential images on the canvas.
+ Better not to use frameAnimation and Translate Animation to implement different non-sequential images on the canvas.
 
 Planned next week.
 Instead of the View class switch to the SurfaceView and then add animation to the canvas.
@@ -76,10 +76,10 @@ Made a small projects involves SurfaceView.
 Tried to understand how to draw several images on canvas at the same time.
 
 Lesson Learned:
-The Animation could work through the SurfaceView, however it would cost a lot of CPU.
+ The Animation could work through the SurfaceView, however it would cost a lot of CPU.
 
 Planned next week.
-Finally implement the bitmaps animation using the SurfaceView.
+ Finally implement the bitmaps animation using the SurfaceView.
 
 === April 18 – April 25 ===
 
@@ -90,7 +90,7 @@ All the decoding of the bitmaps to do before drawing them on canvas.
 The decoding slow downs the drawing. All the decoding should be done on onCreate() method .Tried to avoid unclear “spaghetti code”.
 
 Planned next week.
-To finish the animation part, and start working on the accelerometer movements.
+ To finish the animation part, and start working on the accelerometer movements.
 
 
 === April 18 – April 25 ===
@@ -98,10 +98,10 @@ To finish the animation part, and start working on the accelerometer movements.
 Finished the animation.The hard part was to understand do to redraw on canvas  then the calculation of the new position was already easy. Since the decoding of the bitmaps was done in onCreate() and the movement steps calculations I decided to do in different function, the doDraw function started to be very simple base function that only draw elements. It is working very fast without and slow motion problems.
  
 Lesson learned:
-Be focused on the code but also see the all-abstract picture.
+ Be focused on the code but also see the all-abstract picture.
 
 Planned next week.
-Accelerometer movement.
+ Accelerometer movement.
 
 
 
