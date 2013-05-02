@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -37,17 +38,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	SurfaceHolder mSurfaceHolder;
 	GameViewThread mGVThread;
 	public int movedFieldsArray[] = new int[]{-1,-1,-1,-1};
-	Bitmap bmpNumbers[] = new Bitmap[16];
+	Bitmap bmpNumbers[] = new Bitmap[17];
 	int mBmpWidth;
-	
-	//the R.drawable for all images  
-	/*int[] mBmpArray = { R.drawable.num16blank,R.drawable.num1, R.drawable.num2,
-            R.drawable.num3, R.drawable.num4, R.drawable.num5,
-            R.drawable.num6, R.drawable.num7,
-            R.drawable.num8, R.drawable.num9, R.drawable.num10,
-            R.drawable.num11, R.drawable.num12,
-            R.drawable.num13, R.drawable.num14,R.drawable.num15
-	};*/
 	
 	//Constructor
 	   public GameView(Context context,Bitmap[] bmpNumbers) {
@@ -56,10 +48,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	      if(game15puzzle ==null){
 	    	  game15puzzle = new gameField();
 	      }
-	      //load the bmps
-		 /* for (int i = 0; i < 15; i++) {
-			 myBmp[i] = new BmpSettings(mContext.getResources(),mBmpArray[i]);
-		  }*/
+	     
 		  
 		  mSurfaceHolder =getHolder();
 		  mSurfaceHolder.addCallback(this);
@@ -79,7 +68,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	        // TODO Auto-generated method stub
 	    }
 
-	   
+	 
 
 	    @Override
 	    public void surfaceDestroyed(SurfaceHolder holder) {
@@ -205,8 +194,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			game15puzzle.CreateRandomField();
 		}
 		
+		public void MoveField(int x,int y)
+		{
+			game15puzzle.moveRect(x,y);
+			movedFieldsArray = game15puzzle.getMoveRectArray();	
+			invalidate();
+		}
+		
 		public int[] getMovedFieldsArray() {
 			   return movedFieldsArray;
+		}
+		
+		/**
+		* The function that returns an empty cell position
+		*/
+		public int[] getEmptyPosition()
+		{
+			int emptyPos[] = new int[2];
+			emptyPos[0] = game15puzzle.getEmptyX();
+			emptyPos[1] = game15puzzle.getEmptyY();
+			return emptyPos;
 		}
 		
 		

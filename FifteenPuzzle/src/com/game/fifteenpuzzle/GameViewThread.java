@@ -27,12 +27,12 @@ public class GameViewThread extends Thread{
 	int movingPosX[] = new int[16];
 	int movingPosY[] = new int[16];
 	
-	Bitmap bmpNumbers[] = new Bitmap[16];
+	Bitmap bmpNumbers[] = new Bitmap[17];
 	Paint p = new Paint();
 	
 	int currentXpos[] = new int[16];
 	int currentYpos[] = new int[16];
-     
+    int bg = 16; 
 	
 	//constructor
 	public GameViewThread(SurfaceHolder holder,GameView GameView,Bitmap[] bmpNumbers) {
@@ -230,8 +230,8 @@ public class GameViewThread extends Thread{
              int x,y;
              
             // Bitmap mBgBitmap= BitmapFactory.decodeResource(mGameView.getResources(), R.drawable.bgnew);
-             //canvas.drawBitmap(mBgBitmap, 0, 0, null);
-             canvas.drawRect(0, 0, 800, 1000, p); 
+             canvas.drawBitmap(bmpNumbers[bg], 0, 0, null);
+             //canvas.drawRect(0, 0, 800, 1000, p); 
              canvas.drawText("Shake to Start a New Game", 50, 900, p);
              
              if(mGameView.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
