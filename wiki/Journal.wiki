@@ -75,6 +75,9 @@ In the shake implementation was hard to understand the accelerometer logic callb
 Made a small projects involves SurfaceView.
 Tried to understand how to draw several images on canvas at the same time.
 
+=====Problems:=====
+ No problems at all since the animation was done on the singe object and was drawn into the lock/unlock canvas area.
+
 ===== Lesson Learned:=====
  The Animation could work through the SurfaceView, however it would cost a lot of CPU.
 
@@ -85,9 +88,13 @@ Tried to understand how to draw several images on canvas at the same time.
 
 First attempt to animation. Very slow and crash a lot.
 
+===== Problems:=====
+ *To understand how to draw the all images all the time but make an animation to only few of them.
+ *How to animate button by button when moving more then one number it complicated my code enormously and make it look terrible. 
+
 =====Lesson Learned:=====
- All the decoding of the bitmaps to do before drawing them on canvas.
-The decoding slow downs the drawing. All the decoding should be done on onCreate() method .Tried to avoid unclear “spaghetti code”.
+ *All the decoding of the bitmaps to do before drawing them on canvas.
+ *The decoding slow downs the drawing. All the decoding should be done on onCreate() method .Tried to avoid unclear “spaghetti code”.
 
 =====Planned next week.=====
  To finish the animation part, and start working on the accelerometer movements.
@@ -96,12 +103,17 @@ The decoding slow downs the drawing. All the decoding should be done on onCreate
 === April 18 – April 25 ===
 
 Finished the animation.The hard part was to understand do to redraw on canvas  then the calculation of the new position was already easy. Since the decoding of the bitmaps was done in onCreate() and the movement steps calculations I decided to do in different function, the doDraw function started to be very simple base function that only draw elements. It is working very fast without and slow motion problems.
- 
+
+=====Problems:=====
+ To calculate a correct movement of all thee options: one number, two numbers and three numbers, so the empty rectangle would arrive at the same time with the other numbers. (Should be worked in different speed)
+
 =====Lesson learned:=====
  Be focused on the code but also see the all-abstract picture.
 
 =====Planned next week.=====
- Accelerometer movement.
+ *Accelerometer movement.
+ *To make a code more efficient, avoid a mess work.
+
 
 
 
