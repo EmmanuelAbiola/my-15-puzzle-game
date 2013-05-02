@@ -5,12 +5,12 @@
 === March 14- March 21 ===
  *	Implementation of the first UI.
 
-Problems:
+====== Problems:======
  *	The location of the fifteen bmp.
  *	The draw of the bmp in correct location.
-Lessons learned:
+====== Lessons learned:======
  *	The numbers class design is not efficient for the game implementation
-Planned next week:
+====== Planned next week: ======
 Change the initial game implementation into more intuitive design.
 
 === March 21- March 28 ===
@@ -27,29 +27,29 @@ The game View:
  *	Adding message dialog to the user at the end of the game.
  *	Start using gyroscope.
 
-Problems:
+====== Problems:======
  *  The loading of the multiple images from the res folder is not intuitive. 
  *	Dynamically locate the images on the screen while using only the image and screen resolution. Convert the actual finger position to the field position.
  *	Redraw the images on the screen after the finger touch.
  *	Gyroscope data evaluation, landscape 
 
-Lesson Learned:
+====== Lesson Learned:======
  *  It is better to use the assets folder for loading the images.
  *	For redraw the images it is better to use onTouch () instead onTouchEvent () since the first on has an option of the view parameters that can use postInavlidate to redraw the current view.
  *	The starting a new game after game over should first close the current activity and then open the new game through intent.
  *	The Gyroscope data should be filtered.
-Planned next week.
+====== Planned next week.======
  Gyroscope data evaluation, animation of the changing images. 
 
 === March 28- April 4 ===
 
 Implementation of low pass filter of the gyroscope data.
 
-Problems:
- How to redraw the canvas after gyroscope evaluation. 
+====== Problems:======
+How to redraw the canvas after gyroscope evaluation. 
 
-Planned next week.
- Animation of the changing images. 
+======Planned next week.======
+Animation of the changing images. 
 
 
 === April 4 – April 11 ===
@@ -59,14 +59,14 @@ Tried to do the animation of the moving numbers on the canvas.
 Implemented the “shake” event.
 
 
-Problems:
- Tried to use the Translate Animation and frame animation. Both were not a good fit for the application. TranslateAnimation from the onTouchEvent eventually created the animation however for the all canvas and not the specific number.
+======Problems:======
+Tried to use the Translate Animation and frame animation. Both were not a good fit for the application. TranslateAnimation from the onTouchEvent eventually created the animation however for the all canvas and not the specific number.
 In the shake implementation was hard to understand the accelerometer logic callback function and how to filter the noise and connect the module to activity.
 
-Lesson Learned:
- Better not to use frameAnimation and Translate Animation to implement different non-sequential images on the canvas.
+====== Lesson Learned:======
+Better not to use frameAnimation and Translate Animation to implement different non-sequential images on the canvas.
 
-Planned next week.
+====== Planned next week.======
 Instead of the View class switch to the SurfaceView and then add animation to the canvas.
 
 
@@ -75,33 +75,33 @@ Instead of the View class switch to the SurfaceView and then add animation to th
 Made a small projects involves SurfaceView.
 Tried to understand how to draw several images on canvas at the same time.
 
-Lesson Learned:
- The Animation could work through the SurfaceView, however it would cost a lot of CPU.
+====== Lesson Learned:======
+The Animation could work through the SurfaceView, however it would cost a lot of CPU.
 
-Planned next week.
- Finally implement the bitmaps animation using the SurfaceView.
+======Planned next week.======
+Finally implement the bitmaps animation using the SurfaceView.
 
 === April 18 – April 25 ===
 
 First attempt to animation. Very slow and crash a lot.
 
-Lesson Learned:
+======Lesson Learned:======
 All the decoding of the bitmaps to do before drawing them on canvas.
 The decoding slow downs the drawing. All the decoding should be done on onCreate() method .Tried to avoid unclear “spaghetti code”.
 
-Planned next week.
- To finish the animation part, and start working on the accelerometer movements.
+======Planned next week.======
+To finish the animation part, and start working on the accelerometer movements.
 
 
 === April 18 – April 25 ===
 
 Finished the animation.The hard part was to understand do to redraw on canvas  then the calculation of the new position was already easy. Since the decoding of the bitmaps was done in onCreate() and the movement steps calculations I decided to do in different function, the doDraw function started to be very simple base function that only draw elements. It is working very fast without and slow motion problems.
  
-Lesson learned:
+======Lesson learned:======
  Be focused on the code but also see the all-abstract picture.
 
-Planned next week.
- Accelerometer movement.
+======Planned next week.======
+Accelerometer movement.
 
 
 
