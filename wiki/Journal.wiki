@@ -3,41 +3,41 @@
 
 
 === March 14- March 21 ===
-*	Implementation of the first UI.
+ *	Implementation of the first UI.
 
 Problems:
-*	The location of the fifteen bmp.
-*	The draw of the bmp in correct location.
+ *	The location of the fifteen bmp.
+ *	The draw of the bmp in correct location.
 Lessons learned:
-*	The numbers class design is not efficient for the game implementation
+ *	The numbers class design is not efficient for the game implementation
 Planned next week:
 Change the initial game implementation into more intuitive design.
 
 === March 21- March 28 ===
 Algorithms behind the view: 
-*	Field of the game 
-*	The movement of the selected cell if possible
-*	Mixed field 
-*	Normal field
+ *	Field of the game 
+ *	The movement of the selected cell if possible
+ *	Mixed field 
+ *	Normal field
 This part was just a java coding without much unique code for android.
 
 The game View:
-*	Loading the images from the res folder and draw them according to their position on the field. Both, in portrait and the landscape mode. 
-*	The implementation of the touch event and image movement according to the user finger position,
-*	Adding message dialog to the user at the end of the game.
-*	Start using gyroscope.
+ *	Loading the images from the res folder and draw them according to their position on the field. Both, in portrait and the landscape mode. 
+ *	The implementation of the touch event and image movement according to the user finger position,
+ *	Adding message dialog to the user at the end of the game.
+ *	Start using gyroscope.
 
 Problems:
-*  The loading of the multiple images from the res folder is not intuitive. 
-*	Dynamically locate the images on the screen while using only the image and screen resolution. Convert the actual finger position to the field position.
-*	Redraw the images on the screen after the finger touch.
-*	Gyroscope data evaluation, landscape 
+ *  The loading of the multiple images from the res folder is not intuitive. 
+ *	Dynamically locate the images on the screen while using only the image and screen resolution. Convert the actual finger position to the field position.
+ *	Redraw the images on the screen after the finger touch.
+ *	Gyroscope data evaluation, landscape 
 
 Lesson Learned:
-*  It is better to use the assets folder for loading the images.
-*	For redraw the images it is better to use onTouch () instead onTouchEvent () since the first on has an option of the view parameters that can use postInavlidate to redraw the current view.
-*	The starting a new game after game over should first close the current activity and then open the new game through intent.
-*	The Gyroscope data should be filtered.
+ *  It is better to use the assets folder for loading the images.
+ *	For redraw the images it is better to use onTouch () instead onTouchEvent () since the first on has an option of the view parameters that can use postInavlidate to redraw the current view.
+ *	The starting a new game after game over should first close the current activity and then open the new game through intent.
+ *	The Gyroscope data should be filtered.
 Planned next week.
 Gyroscope data evaluation, animation of the changing images. 
 
