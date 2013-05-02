@@ -89,12 +89,12 @@ Tried to understand how to draw several images on canvas at the same time.
 First attempt to animation. Very slow and crash a lot.
 
 ===== Problems:=====
- *To understand how to draw the all images all the time but make an animation to only few of them.
- *How to animate button by button when moving more then one number it complicated my code enormously and make it look terrible. 
+ * To understand how to draw the all images all the time but make an animation to only few of them.
+ * How to animate button by button when moving more then one number it complicated my code enormously and make it look terrible. 
 
 =====Lesson Learned:=====
- *All the decoding of the bitmaps to do before drawing them on canvas.
- *The decoding slow downs the drawing. All the decoding should be done on onCreate() method .Tried to avoid unclear “spaghetti code”.
+ * All the decoding of the bitmaps to do before drawing them on canvas.
+ * The decoding slow downs the drawing. All the decoding should be done on onCreate() method .Tried to avoid unclear “spaghetti code”.
 
 =====Planned next week.=====
  To finish the animation part, and start working on the accelerometer movements.
@@ -111,8 +111,8 @@ Finished the animation.The hard part was to understand do to redraw on canvas  t
  Be focused on the code but also see the all-abstract picture.
 
 =====Planned next week.=====
- *Accelerometer movement.
- *To make a code more efficient, avoid a mess work.
+ * Accelerometer movement.
+ * To make a code more efficient, avoid a mess work.
 
 
 
