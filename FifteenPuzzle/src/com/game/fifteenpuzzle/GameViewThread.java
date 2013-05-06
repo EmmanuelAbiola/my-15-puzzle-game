@@ -15,9 +15,15 @@ public class GameViewThread extends Thread{
 	private SurfaceHolder holder;
 	private GameView mGameView;
     private boolean mRun = true;
-    int x_pos=120,y_pos=240;
-	int x_InitPos=120,y_InitPos=240;
+    int x_pos=90,y_pos=240;
+	int x_InitPos=90,y_InitPos=240;
 	int x_InitPosLand=360,y_InitPosLand=50;
+	int FinalPosX[] = new int[]{90,140,280,420};
+	int FinalPosY[] = new int[]{240,140,280,420};
+	final static private int NUM_ROWS     = 4;
+    final static private int NUM_COLS     = 4;
+     
+	
 	
 	GameViewThread mGVThread;
 	
@@ -69,6 +75,8 @@ public class GameViewThread extends Thread{
         mRun = b;
     }
 
+   
+    
     
     /**
      * XaxisAnimation - animate over the x axis
@@ -84,7 +92,9 @@ public class GameViewThread extends Thread{
     		 else	
     			 currentXpos[number]=movingPosX[number]+5;
     		 
-    			 currentYpos[number]=getFinalYPos(y_field);
+    		 
+    		 
+    			currentYpos[number]=getFinalYPos(y_field);
 				setXYCurrentPos(number,currentXpos[number],getFinalYPos(y_field));
 				movingPosX[number] = currentXpos[number];
 				movingPosY[number] = currentYpos[number];
@@ -114,6 +124,7 @@ public class GameViewThread extends Thread{
 			} 
      }
      
+     
      /**
       * YaxisAnimation - animate over the x axis
       */   
@@ -121,13 +132,14 @@ public class GameViewThread extends Thread{
     	  
     	  if (prevYpos[number] < y_field && movingPosY[number] < getFinalYPos(y_field)){ //y-axis ,current position on the field < final position
 				
-    		  if (movedFields[1]!=-1 && movedFields[2]==0 && number == 0)
+    		     if (movedFields[1]!=-1 && movedFields[2]==0 && number == 0)
 	    			 currentYpos[number]=movingPosY[number]+10;
 	    		 else if(movedFields[2]!=-1 && number == 0)
 	    			 currentYpos[number]=movingPosY[number]+15;
 	    		 else	
 	    			 currentYpos[number]=movingPosY[number]+5;
 				
+    		  
     		  	currentXpos[number]=getFinalXPos(x_field);
 				setXYCurrentPos(number,getFinalXPos(x_field),currentYpos[number]);
 				movingPosX[number] = currentXpos[number];
@@ -142,6 +154,7 @@ public class GameViewThread extends Thread{
 	    			 currentYpos[number]=movingPosY[number]-15;
 	    		 else	
 	    			 currentYpos[number]=movingPosY[number]-5;
+				
 				
 				currentXpos[number]=getFinalXPos(x_field);
 				setXYCurrentPos(number,getFinalXPos(x_field),currentYpos[number]);
@@ -167,8 +180,8 @@ public class GameViewThread extends Thread{
     	int number;
     	movedFields = mGameView.getMovedFieldsArray();
     	
-        for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < NUM_ROWS; i++) {
+			for (int j = 0; j < NUM_COLS; j++) {
 				
 				number = mGameView.game15puzzle.getFieldNumber(i, j);
 				
@@ -235,17 +248,15 @@ public class GameViewThread extends Thread{
              canvas.drawText("Shake to Start a New Game", 50, 900, p);
              
              if(mGameView.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-             	 x_pos = x_InitPos;
-                 y_pos = y_InitPos;
-                 //canvas.drawRect(110, 120, 640, 760, p);	             
+            	 FinalPosX[0] = x_InitPos;
+            	 FinalPosY[0] = y_InitPos;
              } 
              else {
-             	 x_pos = x_InitPosLand;
-                 y_pos = y_InitPosLand;
-                // canvas.drawRect(350, 40, 880, 570, p);    
+            	 FinalPosX[0] = x_InitPosLand;
+            	 FinalPosY[0] = y_InitPosLand;
              }	
              
-         	 for (int i = 0; i < 16; i++) {
+         	 for (int i = 0; i < NUM_ROWS * NUM_COLS; i++) {
          		 x=getXCurrentPos(i);
 				 y=getYCurrentPos(i);
 				 canvas.drawBitmap(bmpNumbers[i], x,y,p);
@@ -263,13 +274,13 @@ public class GameViewThread extends Thread{
     	
     	int pos=0;
     	if(i == 0 )
-			pos = x_pos;
+			pos = FinalPosX[0];
 		if(i == 1 )
-			pos = x_pos+130;
+			pos = FinalPosX[0]+FinalPosX[1];
 		if(i == 2 )
-			pos = x_pos+260;
+			pos = FinalPosX[0]+FinalPosX[2];
 		if(i == 3 )
-			pos = x_pos+390;
+			pos = FinalPosX[0]+FinalPosX[3];
 		return pos;
 	}
     
@@ -281,13 +292,13 @@ public class GameViewThread extends Thread{
     public int getFinalYPos(int j){
     	int pos=0;
     	if(j == 0 )
-			pos = y_pos;
+			pos = FinalPosY[0];
 		if(j == 1 )
-			pos = y_pos+130;
+			pos = FinalPosY[0]+FinalPosY[1];
 		if(j == 2 )
-			pos = y_pos+260;
+			pos = FinalPosY[0]+FinalPosY[2];
 		if(j == 3 )
-			pos = y_pos+390;
+			pos = FinalPosY[0]+FinalPosY[3];
      return pos;
     }
     

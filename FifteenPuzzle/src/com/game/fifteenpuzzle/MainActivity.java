@@ -35,8 +35,13 @@ public class MainActivity extends Activity{//,SensorEventListener{
 	
 	private SensorManager mSensorManager;
 	private ShakeEventListener mSensorListener; 
-	  
-	
+	private int              pixelByCol;
+    private int              pixelByRow;
+    private Bitmap[]         choppedPictures          = new Bitmap[17];  
+    private Bitmap bmpPicture;
+    String  num;
+    GameView gv;
+    
 	int[] mBitmapsArray = { com.game.fifteenpuzzle.R.drawable.num16blank,com.game.fifteenpuzzle.R.drawable.num1, com.game.fifteenpuzzle.R.drawable.num2,
 			com.game.fifteenpuzzle.R.drawable.num3, com.game.fifteenpuzzle.R.drawable.num4, com.game.fifteenpuzzle.R.drawable.num5,
 			com.game.fifteenpuzzle.R.drawable.num6, com.game.fifteenpuzzle.R.drawable.num7,
@@ -51,19 +56,39 @@ public class MainActivity extends Activity{//,SensorEventListener{
 		super.onCreate(savedInstanceState);
 		mContext = getApplicationContext();
 		
-		//load the bmps
+		Bundle extras = getIntent().getExtras(); 
+		if(extras !=null)
+		{
+		  num = extras.getString("type");
+		}
+		
+		//load the number bmps
 		for (int j = 0; j < bmpNumbers.length; j++) {	
 			bmpNumbers[j] = BitmapFactory.decodeResource(mContext.getResources(),mBitmapsArray[j]);	
 		}
+		//load the picture
+		//bmpPicture = BitmapFactory.decodeResource(mContext.getResources(),com.game.fifteenpuzzle.R.drawable.android);	
 		
-		final GameView gv = new GameView(this,bmpNumbers);
+		
+		if(num.equalsIgnoreCase("Numbers") == true)
+			gv = new GameView(this,bmpNumbers);
+		else{	
+			bmpPicture = BitmapFactory.decodeFile(num.toString());
+			//create picture array
+			
+			Bitmap bmpScaled = Bitmap.createScaledBitmap(bmpPicture, 700, 700, false);
+			
+			generateChoppedBitmap(bmpScaled); 
+			gv = new GameView(this,choppedPictures);
+		
+		}
 		setContentView(gv);
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mSensorListener = new ShakeEventListener();   
 	 	mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
 			public void onShake() {
 				gv.ShakeField();
-			    gv.postInvalidate();
+			    //gv.postInvalidate();
 			}
 		});
 	 	mSensorListener.setOnTiltListener(new ShakeEventListener.OnTiltListener() {
@@ -96,11 +121,34 @@ public class MainActivity extends Activity{//,SensorEventListener{
 			}
 			
 		});
-
-	 	
-	 	
 	 	
 	}
+	
+	 private void generateChoppedBitmap(Bitmap bmp) {
+	        
+		 	Bitmap bmpNew;
+		 	BitmapFactory.Options opts = new BitmapFactory.Options();
+	        opts.inScaled = false;
+	        
+	       // bmpNew = Bitmap.createScaledBitmap(bmp, 650, 651, true);
+	        final int width = bmp.getWidth();
+	        final int height = bmp.getHeight();
+
+	        pixelByCol = width / 5;
+	        pixelByRow = height / 5;
+	        int i = 1;
+	        for (int row = 0; row < 4; row++) {
+	            for (int col = 0; col < 4; col++) {
+	                int startx = pixelByCol * col;
+	                int starty = pixelByRow * row;
+	                choppedPictures[i++] = Bitmap.createBitmap(bmp, startx, starty, pixelByCol, pixelByRow);
+	            }
+	        }
+	        Bitmap bitmap = Bitmap.createBitmap(pixelByCol, pixelByRow, Bitmap.Config.ARGB_8888);
+	        bitmap.eraseColor(-1);
+	        choppedPictures[0] = bitmap;
+	        choppedPictures[16] =BitmapFactory.decodeResource(mContext.getResources(),mBitmapsArray[16]);
+	    }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

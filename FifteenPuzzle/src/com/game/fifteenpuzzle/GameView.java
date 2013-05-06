@@ -31,7 +31,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	Context mContext;
 	Canvas mCanvas;
 	int x_pos=120,y_pos=240;
-	int x_InitPos=120,y_InitPos=240;
+	int x_InitPos=90,y_InitPos=240;
 	int x_InitPosLand=360,y_InitPosLand=50;
 	gameField game15puzzle;
 	BmpSettings myBmp[] = new BmpSettings[15];
@@ -39,6 +39,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	GameViewThread mGVThread;
 	public int movedFieldsArray[] = new int[]{-1,-1,-1,-1};
 	Bitmap bmpNumbers[] = new Bitmap[17];
+	Bitmap bmpPicture;
 	int mBmpWidth;
 	
 	//Constructor
@@ -48,10 +49,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	      if(game15puzzle ==null){
 	    	  game15puzzle = new gameField();
 	      }
-	     
-		  
 		  mSurfaceHolder =getHolder();
 		  mSurfaceHolder.addCallback(this);
+		  //bmpPicture = BitmapFactory.decodeResource(mContext.getResources(),com.game.fifteenpuzzle.R.drawable.android);	
 		  this.bmpNumbers = bmpNumbers;
 	   }
 	 
@@ -85,7 +85,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	        }
 	        }
 	  
-	    
+	   
 	  /* @Override
 	     protected void onDraw(Canvas canvas) {
 	         super.onDraw(canvas);
@@ -144,8 +144,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			  public void onClick(DialogInterface arg0, int arg1) {
 				  // start over the activity when the OK button is clicked
 				  ((MainActivity) getContext()).finish();
-				  Intent intent = new Intent(mContext, MainActivity.class);
-				  ((MainActivity) getContext()).startActivity(intent); //The method startActivity(Intent)
+				  //Intent intent = new Intent(mContext, MainActivity.class);
+				  //((MainActivity) getContext()).startActivity(intent); //The method startActivity(Intent)
 			  
 			  }});
 			 ad.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
@@ -168,7 +168,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			}
 			else
 				x = x - x_InitPosLand;
-			x = x / bmpNumbers[0].getWidth();
+			x = x / 140;
 			return x;
 		}
 	   /**
@@ -182,7 +182,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			}
 			else
 				y = y - y_InitPosLand;
-			y = y / bmpNumbers[0].getWidth();
+			y = y / 140;
 			return y;
 		}
 	   
@@ -192,6 +192,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 		public void ShakeField()
 		{
 			game15puzzle.CreateRandomField();
+			invalidate();
 		}
 		
 		public void MoveField(int x,int y)
@@ -228,7 +229,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			int i=0;
 			
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					if(event.getX() >= x_InitPos && event.getY() <= y_InitPos+(4*bmpNumbers[0].getWidth())){
+					if(event.getX() >= x_InitPos && event.getY() <= y_InitPos+(4*140)){
 						if(game15puzzle.moveRect(ScreenToField_X((int)event.getX()),ScreenToField_Y((int) event.getY())) == true){
 						    movedFieldsArray = game15puzzle.getMoveRectArray();						
 							invalidate();
