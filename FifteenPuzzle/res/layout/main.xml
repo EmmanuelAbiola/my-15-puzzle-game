@@ -27,14 +27,23 @@
 
 	<Button 
 			android:layout_marginTop="10dp"
-			android:layout_marginBottom="20dp"
 			android:layout_height="wrap_content" 
 			android:text="Numbers Puzzle" 
 			android:layout_width="fill_parent" 
 			android:id="@+id/buttonNumbers"
 			android:background="@drawable/background" 
-			
+			android:layout_weight="0" 
+			android:layout_gravity="center"></Button>
+	<Button 
+			android:layout_marginTop="10dp"
+			android:layout_marginBottom="20dp"
+			android:layout_height="wrap_content" 
+			android:text="Photo Image Puzzle" 
+			android:layout_width="fill_parent" 
+			android:id="@+id/buttonPhoto"
+			android:background="@drawable/background" 
 			android:layout_weight="0" 
 			android:layout_gravity="center"></Button>
     
+	
 </LinearLayout>

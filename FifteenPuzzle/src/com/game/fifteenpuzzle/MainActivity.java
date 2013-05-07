@@ -15,6 +15,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -76,8 +77,7 @@ public class MainActivity extends Activity{//,SensorEventListener{
 			bmpPicture = BitmapFactory.decodeFile(num.toString());
 			//create picture array
 			
-			Bitmap bmpScaled = Bitmap.createScaledBitmap(bmpPicture, 700, 700, false);
-			
+			Bitmap bmpScaled = Bitmap.createScaledBitmap(bmpPicture, 560, 560, false);
 			generateChoppedBitmap(bmpScaled); 
 			gv = new GameView(this,choppedPictures);
 		
@@ -134,8 +134,8 @@ public class MainActivity extends Activity{//,SensorEventListener{
 	        final int width = bmp.getWidth();
 	        final int height = bmp.getHeight();
 
-	        pixelByCol = width / 5;
-	        pixelByRow = height / 5;
+	        pixelByCol = width/4;
+	        pixelByRow = height/4;
 	        int i = 1;
 	        for (int row = 0; row < 4; row++) {
 	            for (int col = 0; col < 4; col++) {
