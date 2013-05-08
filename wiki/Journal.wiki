@@ -139,24 +139,30 @@ Added the accelerometer movement of the numbers. The new code was added to the p
 ====Problems:====
   The capturing the image through the camera is working through the 
   
+  {{{
   Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
   startActivityForResult(cameraIntent, 0);
+  }}}
   
   This should bring the picture to our onActivityResult function that should be the in Intent data.
   (Without any problems same thing work very well with the gallery picture) however the data that I get from the intent was null. I read a lot of android documentation and understand     that this could happened because of the:
 
+  {{{
   cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+  }}}
 
   Since I wanted to bring a high quality picture to the game and need to look for a picture in provided URI. However removing of this line, and suggestion to get a low-resolution image   didn’t work, I still got null in the data variable of the result function.
   I solved the problem using a slightly different coding 
 
+  {{{
   mCapturedImageURI = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values); 
+  }}}
 
   I saved the path that I save in the picture and then putExtra previously saved URI 
-  
+  {{{
   Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);  cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);  
   startActivityForResult(cameraIntent, CAPTURE_PICTURE_INTENT);
-
+  }}}
 It magically worked ☺
 
 ====Lesson learned:====
