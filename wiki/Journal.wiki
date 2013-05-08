@@ -125,7 +125,7 @@ Added the accelerometer movement of the numbers. The new code was added to the p
 
 ====Lesson Learned:====
  Without the hysteresis filter the movement of the puzzle is unstable.
- https://code.google.com/p/my-15-puzzle-game/source/browse/wiki/images/hysteresis.png
+ https://code.google.com/p/my-15-puzzle-game/source/browse/wiki/hysteresis.png
  
 ====Planned next week:====
  Load the picture from the gallery, split it up to the squares and make a puzzle.
