@@ -114,6 +114,57 @@ Finished the animation.The hard part was to understand do to redraw on canvas  t
  * Accelerometer movement.
  * To make a code more efficient, avoid a mess work.
 
+===April 25 – May 2===
+
+Added the accelerometer movement of the numbers. The new code was added to the previously implicated Shake method that uses the accelerometer as well. However now upon the tilt the different interface is called. 
+
+====Problems:====
+ * The hardest part was to implement the filter of the accelerometer data.Since there is a lot of data coming, and I shouldn’t change the position of the square
+   at each movement but only when I have a real movement.
+ * I used the hysteresis filter. I realized that when I want the number to move is when the accelerometer value is +/-3 on x, y-axis however nothing with move when the coming data          toggling between 3.5 and 2.5 the only way to move is to reach the stable condition of +/-1 on x, y-axis.
+
+====Lesson Learned:====
+ Without the hysteresis filter the movement of the puzzle is unstable.
+ https://code.google.com/p/my-15-puzzle-game/source/browse/wiki/images/hysteresis.png
+ 
+====Planned next week:====
+ Load the picture from the gallery, split it up to the squares and make a puzzle.
+
+
+===May 2 – May 9===
+
+ * Added the feature of loading, chopping and make a puzzle from the device gallery.
+ * Added feature of taking a photo and making the puzzle out of it without launching the gallery.
+
+====Problems:====
+  The capturing the image through the camera is working through the 
+  
+  Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+  startActivityForResult(cameraIntent, 0);
+  
+  This should bring the picture to our onActivityResult function that should be the in Intent data.
+  (Without any problems same thing work very well with the gallery picture) however the data that I get from the intent was null. I read a lot of android documentation and understand     that this could happened because of the:
+
+  cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+  Since I wanted to bring a high quality picture to the game and need to look for a picture in provided URI. However removing of this line, and suggestion to get a low-resolution image   didn’t work, I still got null in the data variable of the result function.
+  I solved the problem using a slightly different coding 
+
+  mCapturedImageURI = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values); 
+
+  I saved the path that I save in the picture and then putExtra previously saved URI 
+  
+  Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);  cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI);  
+  startActivityForResult(cameraIntent, CAPTURE_PICTURE_INTENT);
+
+It magically worked ☺
+
+====Lesson learned:====
+ * How does the result intent working? Using of the camera and the gallery through intent.
+ * Cursor query, that this interface provides random read-write access to the result set returned by a database query. With this interface I get the picture from the current path. 
+
+====Planned next week:====
+ To add sound to the game
 
 
 
