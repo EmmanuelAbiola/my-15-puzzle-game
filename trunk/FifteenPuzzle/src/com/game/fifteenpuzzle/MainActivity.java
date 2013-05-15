@@ -1,32 +1,24 @@
 package com.game.fifteenpuzzle;
 
-
-import com.game.fifteenpuzzle.BmpSettings;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
-import android.view.Display;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.WindowManager;
 
-import android.widget.ImageView;
+
 
 public class MainActivity extends Activity{//,SensorEventListener{
 
@@ -40,8 +32,15 @@ public class MainActivity extends Activity{//,SensorEventListener{
     private int              pixelByRow;
     private Bitmap[]         choppedPictures          = new Bitmap[17];  
     private Bitmap bmpPicture;
-    String  num;
-    GameView gv;
+    private String  puzzleType=   null;
+    private String  hint=  "cancel";
+    private String  tilt=  "addTilt"; 
+    private GameView gv;
+    private Bitmap bmpScaled;
+    private MenuItem addHint,cancelHint;
+    private MenuItem addTilt,cancelTilt;
+    private boolean mInit = false;
+    private int BMP_WIDTH = 140;
     
 	int[] mBitmapsArray = { com.game.fifteenpuzzle.R.drawable.num16blank,com.game.fifteenpuzzle.R.drawable.num1, com.game.fifteenpuzzle.R.drawable.num2,
 			com.game.fifteenpuzzle.R.drawable.num3, com.game.fifteenpuzzle.R.drawable.num4, com.game.fifteenpuzzle.R.drawable.num5,
@@ -56,28 +55,27 @@ public class MainActivity extends Activity{//,SensorEventListener{
 		protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mContext = getApplicationContext();
-		
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		Bundle extras = getIntent().getExtras(); 
+		choppedPictures[16] =BitmapFactory.decodeResource(mContext.getResources(),mBitmapsArray[16]);
+		
 		if(extras !=null)
 		{
-		  num = extras.getString("type");
+			puzzleType = extras.getString("type");
 		}
 		
 		//load the number bmps
 		for (int j = 0; j < bmpNumbers.length; j++) {	
 			bmpNumbers[j] = BitmapFactory.decodeResource(mContext.getResources(),mBitmapsArray[j]);	
 		}
-		//load the picture
-		//bmpPicture = BitmapFactory.decodeResource(mContext.getResources(),com.game.fifteenpuzzle.R.drawable.android);	
 		
 		
-		if(num.equalsIgnoreCase("Numbers") == true)
+		if(puzzleType.equalsIgnoreCase("Numbers") == true)
 			gv = new GameView(this,bmpNumbers);
 		else{	
-			bmpPicture = BitmapFactory.decodeFile(num.toString());
+			bmpPicture = BitmapFactory.decodeFile(puzzleType.toString());
 			//create picture array
-			
-			Bitmap bmpScaled = Bitmap.createScaledBitmap(bmpPicture, 560, 560, false);
+			bmpScaled = Bitmap.createScaledBitmap(bmpPicture, BMP_WIDTH*4, BMP_WIDTH*4, false);
 			generateChoppedBitmap(bmpScaled); 
 			gv = new GameView(this,choppedPictures);
 		
@@ -86,9 +84,21 @@ public class MainActivity extends Activity{//,SensorEventListener{
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mSensorListener = new ShakeEventListener();   
 	 	mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
-			public void onShake() {
+			
+	 		public void onShake() {
+	 			mInit =true;
+				MediaPlayer shakeSound = new MediaPlayer();
+				shakeSound = MediaPlayer.create(MainActivity.this, R.raw.shake);
+				shakeSound.start();
 				gv.ShakeField();
-			    //gv.postInvalidate();
+				try {
+					Thread.sleep(200);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				shakeSound.stop();
+				shakeSound.release();
 			}
 		});
 	 	mSensorListener.setOnTiltListener(new ShakeEventListener.OnTiltListener() {
@@ -97,40 +107,41 @@ public class MainActivity extends Activity{//,SensorEventListener{
 				int emptyPos[] = new int[2];
 				Log.d("MOVE", String.format(" modeX = %d", (int)modeX));
 				emptyPos = gv.getEmptyPosition();
-				if(modeX == -1){
-					if(emptyPos[0]-1 != -1){
-						gv.MoveField(emptyPos[0]-1,emptyPos[1]);
+				if(tilt.contentEquals("cancel") == false && mInit == true){  
+					if(modeX == -1){
+						if(emptyPos[0]-1 != -1){
+							gv.MoveField(emptyPos[0]-1,emptyPos[1]);
+						}
 					}
+	    			if(modeX == 1)
+	    				gv.MoveField(emptyPos[0]+1,emptyPos[1]);
 				}
-    			if(modeX == 1)
-    				gv.MoveField(emptyPos[0]+1,emptyPos[1]);
-				
 			}
 			public void onTiltY(int modeY) {
 				int emptyPos[] = new int[2];
 				Log.d("MOVE", String.format(" modeY = %d", (int)modeY));
 				emptyPos = gv.getEmptyPosition();
-				  
-				if(modeY == -1)
-    				gv.MoveField(emptyPos[0],emptyPos[1]+1);
-    			if(modeY == 1){
-    				if(emptyPos[1]-1 != -1){
-    					gv.MoveField(emptyPos[0],emptyPos[1]-1);
-    				}
-    			}
+				if(tilt.contentEquals("cancel") == false && mInit == true){  
+					if(modeY == -1)
+	    				gv.MoveField(emptyPos[0],emptyPos[1]+1);
+	    			if(modeY == 1){
+	    				if(emptyPos[1]-1 != -1){
+	    					gv.MoveField(emptyPos[0],emptyPos[1]-1);
+	    				}
+	    			}
+				}
 			}
 			
 		});
+	 	
 	 	
 	}
 	
 	 private void generateChoppedBitmap(Bitmap bmp) {
 	        
-		 	Bitmap bmpNew;
+		 	
 		 	BitmapFactory.Options opts = new BitmapFactory.Options();
 	        opts.inScaled = false;
-	        
-	       // bmpNew = Bitmap.createScaledBitmap(bmp, 650, 651, true);
 	        final int width = bmp.getWidth();
 	        final int height = bmp.getHeight();
 
@@ -141,24 +152,80 @@ public class MainActivity extends Activity{//,SensorEventListener{
 	            for (int col = 0; col < 4; col++) {
 	                int startx = pixelByCol * col;
 	                int starty = pixelByRow * row;
-	                choppedPictures[i++] = Bitmap.createBitmap(bmp, startx, starty, pixelByCol, pixelByRow);
+	                if(i<16)
+	                	choppedPictures[i++] = Bitmap.createBitmap(bmp, startx, starty, pixelByCol, pixelByRow);
+	                else{
+	                	Bitmap bitmap = Bitmap.createBitmap(pixelByCol, pixelByRow, Bitmap.Config.ARGB_8888);
+	                	bitmap.eraseColor(-1);
+	                	choppedPictures[0] = bitmap;
+	            	}
 	            }
 	        }
-	        Bitmap bitmap = Bitmap.createBitmap(pixelByCol, pixelByRow, Bitmap.Config.ARGB_8888);
-	        bitmap.eraseColor(-1);
-	        choppedPictures[0] = bitmap;
-	        choppedPictures[16] =BitmapFactory.decodeResource(mContext.getResources(),mBitmapsArray[16]);
-	    }
+	  }
 	
+	 private void AddBitmapHint(Bitmap bmp,int i,boolean add_cancel) {
+		 Paint paint = new Paint();
+		 Canvas c = new Canvas (choppedPictures[i]); 
+         paint.setTextSize(35);
+         paint.setColor(Color.WHITE);
+         paint.setTypeface(Typeface.DEFAULT_BOLD); 
+         if(add_cancel==true){
+			 if(hint.contentEquals("add") == true){     
+	            c.drawText(String.valueOf(i),7,30,paint);
+			 }
+         }
+	 }
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		
+	    addHint = menu.getItem(0);
+	    cancelHint =  menu.getItem(1);
+	    addTilt = menu.getItem(2);
+	    cancelTilt =  menu.getItem(3);
+		
+	    menu.getItem(1).setVisible(false);
+	    menu.getItem(2).setVisible(false);
+	    if(puzzleType.equalsIgnoreCase("Numbers") == true){
+	    	addHint.setVisible(false);
+	    	cancelHint.setVisible(false);
+		}
+	    return true;
 	}
 	
+	 @Override
+	    public boolean onOptionsItemSelected(MenuItem item) {
+	    	 
+	     if(item.getItemId() == R.id.add_tilt){
+	         tilt = "addTilt";
+	         item.setVisible(false);
+	         cancelTilt.setVisible(true);
+	     } 
+	     if(item.getItemId() == R.id.cancel_tilt){
+	         tilt = "cancel";
+	         item.setVisible(false);
+	         addTilt.setVisible(true);
+	     } 
+	     if(item.getItemId() == R.id.add_hint){
+	         hint = "add";
+	         item.setVisible(false);
+	         cancelHint.setVisible(true);
+	         for(int i= 1;i<16;i++){
+	        	 AddBitmapHint(choppedPictures[i],i,true);
+	         }
+	        } 
+	        if(item.getItemId() == R.id.cancel_hint){
+	       	 hint = "cancel";
+	       	 item.setVisible(false);
+	       	 addHint.setVisible(true);
+	       	 generateChoppedBitmap(bmpScaled);
+	        } 
+	     return true;
+	    }  
 	
-		@Override
+	
+	@Override
 	  protected void onResume() {
 	    super.onResume();
 	    mSensorManager.registerListener(mSensorListener,
@@ -171,4 +238,7 @@ public class MainActivity extends Activity{//,SensorEventListener{
 	    mSensorManager.unregisterListener(mSensorListener);
 	    super.onStop();
 	  }
+	  
+	  
+	  
 }//end of class

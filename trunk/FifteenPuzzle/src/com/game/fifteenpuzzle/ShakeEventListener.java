@@ -17,6 +17,8 @@ public class ShakeEventListener implements SensorEventListener {
   static  int modeX = 0; 
   static  int modeY = 0; 
   static  int afterShakeCounter = 0; 
+  private boolean mInit = true;
+  
   //OnShakeListener that is called when shake is detected.
   private OnShakeListener mShakeListener;
   private OnTiltListener mTiltListener;
@@ -62,7 +64,7 @@ public class ShakeEventListener implements SensorEventListener {
     
     
     //Log.d("check acclererometer", String.format(" x = %d y = %d z = %d", (int)x,(int)y,(int)z));
-    //if(afterShakeCounter >= 30){
+   // if(afterShakeCounter >= 30){
     if(x>=3 && modeX == 0){//left
     	modeX = 1;
     	Log.d("move left", String.format(" x = %d modeX = %d", (int)x,(int)modeX));
@@ -93,8 +95,8 @@ public class ShakeEventListener implements SensorEventListener {
     	modeY = 0;
     if(y>=-1 && modeY == -1)
     	modeY = 0;
-  //  }else
-   // 	afterShakeCounter++;
+   // }else
+    //	afterShakeCounter++;
     
     
     //get the difference between the measurements

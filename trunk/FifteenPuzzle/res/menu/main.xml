@@ -1,9 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-	<item
-		android:id="@+id/action_settings"
-		android:orderInCategory="100"
-		android:showAsAction="never"
-		android:title="@string/action_settings"/>
-
+	 <item android:id="@+id/add_hint"
+           android:title="Add Image Hint" />
+     <item android:id="@+id/cancel_hint"
+           android:title="Cancel Image Hint" />
+     <item android:id="@+id/add_tilt"
+           android:title="Add Tilt" />
+     <item android:id="@+id/cancel_tilt"
+           android:title="Cancel Tilt" />
+       
+		
 </menu>
