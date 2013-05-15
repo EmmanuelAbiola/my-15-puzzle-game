@@ -86,7 +86,7 @@ Finished the animation.
 The first attempt to animation was very slow and crashes a lot.
 The hard part was to understand do to redraw on canvas then the calculation of the new position was already easy. Since the decoding of the bitmaps was done in {{{onCreate()}}} and the movement steps calculations I decided to do in different function, the doDraw function started to be very simple base function that only draw elements. It is working very fast without and slow motion problems.
  
-Lesson learned:
+====Lesson learned:====
 The lesson is to do all the decoding of the bitmaps to do before drawing them on canvas. The decoding slow downs the drawing. All the decoding should be done on {{{onCreate()}}} method Tried to avoid unclear “spaghetti code” 
 Be focused on the code but also see the all-abstract picture.
 
@@ -109,7 +109,6 @@ Tried to understand how to draw several images on canvas at the same time.
 =====Planned next week.=====
  Finally implement the bitmaps animation using the {{{ class SurfaceView}}}.
  
-
 
 === April 4 – April 11 ===
 
