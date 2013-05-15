@@ -15,30 +15,26 @@ public class GameViewThread extends Thread{
 	private SurfaceHolder holder;
 	private GameView mGameView;
     private boolean mRun = true;
-    int x_pos=90,y_pos=240;
-	int x_InitPos=90,y_InitPos=240;
-	int x_InitPosLand=360,y_InitPosLand=50;
-	int FinalPosX[] = new int[]{90,140,280,420};
-	int FinalPosY[] = new int[]{240,140,280,420};
+    //private int x_pos=90,y_pos=240;
+    private int x_InitPos=90,y_InitPos=240;
+    private int x_InitPosLand=360,y_InitPosLand=50;
+    private int FinalPosX[] = new int[]{90,140,280,420};
+    private int FinalPosY[] = new int[]{240,140,280,420};
 	final static private int NUM_ROWS     = 4;
     final static private int NUM_COLS     = 4;
-     
 	
+    private int movedFields[] = new int[]{-1,-1,-1,-1};
+    private int prevXpos[] = new int[16];
+    private int prevYpos[] = new int[16];
+    private int movingPosX[] = new int[16];
+    private int movingPosY[] = new int[16];
 	
-	GameViewThread mGVThread;
-	
-	int movedFields[] = new int[]{-1,-1,-1,-1};
-	int prevXpos[] = new int[16];
-	int prevYpos[] = new int[16];
-	int movingPosX[] = new int[16];
-	int movingPosY[] = new int[16];
-	
-	Bitmap bmpNumbers[] = new Bitmap[17];
+    private Bitmap bmpNumbers[] = new Bitmap[17];
 	Paint p = new Paint();
 	
-	int currentXpos[] = new int[16];
-	int currentYpos[] = new int[16];
-    int bg = 16; 
+	private int currentXpos[] = new int[16];
+	private int currentYpos[] = new int[16];
+	private int BG_IDX = 16; 
 	
 	//constructor
 	public GameViewThread(SurfaceHolder holder,GameView GameView,Bitmap[] bmpNumbers) {
@@ -242,9 +238,7 @@ public class GameViewThread extends Thread{
              p.setTextSize(52);
              int x,y;
              
-            // Bitmap mBgBitmap= BitmapFactory.decodeResource(mGameView.getResources(), R.drawable.bgnew);
-             canvas.drawBitmap(bmpNumbers[bg], 0, 0, null);
-             //canvas.drawRect(0, 0, 800, 1000, p); 
+             canvas.drawBitmap(bmpNumbers[BG_IDX], 0, 0, null);
              canvas.drawText("Shake to Start a New Game", 50, 900, p);
              
              if(mGameView.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
@@ -256,7 +250,7 @@ public class GameViewThread extends Thread{
             	 FinalPosY[0] = y_InitPosLand;
              }	
              
-         	 for (int i = 0; i < NUM_ROWS * NUM_COLS; i++) {
+         	 for (int i = 0; i < 16; i++) {
          		 x=getXCurrentPos(i);
 				 y=getYCurrentPos(i);
 				 canvas.drawBitmap(bmpNumbers[i], x,y,p);

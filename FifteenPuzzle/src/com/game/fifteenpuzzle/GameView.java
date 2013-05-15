@@ -22,8 +22,6 @@ import java.lang.Thread;
 //import android.view.animation.Animation;
 //import android.view.animation.BounceInterpolator;
 import android.view.animation.TranslateAnimation;
-//import android.widget.ImageView;
-//import android.app.AlertDialog;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
@@ -34,7 +32,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	int x_InitPos=90,y_InitPos=240;
 	int x_InitPosLand=360,y_InitPosLand=50;
 	gameField game15puzzle;
-	BmpSettings myBmp[] = new BmpSettings[15];
+	//BmpSettings myBmp[] = new BmpSettings[15];
 	SurfaceHolder mSurfaceHolder;
 	GameViewThread mGVThread;
 	public int movedFieldsArray[] = new int[]{-1,-1,-1,-1};
@@ -51,7 +49,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	      }
 		  mSurfaceHolder =getHolder();
 		  mSurfaceHolder.addCallback(this);
-		  //bmpPicture = BitmapFactory.decodeResource(mContext.getResources(),com.game.fifteenpuzzle.R.drawable.android);	
 		  this.bmpNumbers = bmpNumbers;
 	   }
 	 
@@ -62,13 +59,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	    	mGVThread.setRunning(true);
 	    	mGVThread.start();
 	    }
-	   
-	   @Override
-	    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-	        // TODO Auto-generated method stub
-	    }
-
-	 
 
 	    @Override
 	    public void surfaceDestroyed(SurfaceHolder holder) {
@@ -85,52 +75,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	        }
 	        }
 	  
-	   
-	  /* @Override
-	     protected void onDraw(Canvas canvas) {
-	         super.onDraw(canvas);
-	         mCanvas = canvas;
-	         Paint p = new Paint();
-	         p.setAntiAlias(false);
-	         p.setColor(Color.argb(255,100, 100, 255));
-	         p.setTextSize(52);
-	         
-	         Bitmap mBgBitmap= BitmapFactory.decodeResource(getResources(), R.drawable.bgnew);
-	         canvas.drawBitmap(mBgBitmap, 0, 0, null);
-	         canvas.drawText("Shake to Start a New Game", 50, 900, p);
-	         
-	         if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) 
-	         {
-	         	x_pos = x_InitPos;
-	             y_pos = y_InitPos;
-	             canvas.drawRect(110, 230, 640, 760, p);	             
-	         } 
-	         else 
-	             {
-	         	 x_pos = x_InitPosLand;
-	             y_pos = y_InitPosLand;
-	             canvas.drawRect(350, 40, 880, 570, p);    
-	         }	
-	         
-	         //drawing all field
-	         for (int i = 0; i < 4; i++) {
-	 			for (int j = 0; j < 4; j++) {
-	 				d = getResources().getDrawable(mBmpArray[game15puzzle.getFieldNumber(i, j)]);
-	 				d.setBounds(x_pos,y_pos ,x_pos+myBmp[0].getWidth()+10, y_pos+myBmp[0].getWidth()+10);
-	 				y_pos=y_pos+myBmp[0].getWidth()+10;
-	 				d.draw(canvas);	 					
-	 			}//inner loop
-	 			x_pos=x_pos+myBmp[0].getWidth()+10;
-	 			if(this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){ 
-	 				y_pos=y_InitPos;
-	            }
-	 			else
-	 				y_pos=y_InitPosLand;
-	 				d.draw(canvas);
-	         }//outer for 	        
-	     }//onDraw
-*/
-	   
+	    @Override
+	    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+	        // TODO Auto-generated method stub
+	    }
 	   /**
 		 * The dialog that appears at the end of the game
 		 *  
@@ -144,20 +92,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			  public void onClick(DialogInterface arg0, int arg1) {
 				  // start over the activity when the OK button is clicked
 				  ((MainActivity) getContext()).finish();
-				  //Intent intent = new Intent(mContext, MainActivity.class);
-				  //((MainActivity) getContext()).startActivity(intent); //The method startActivity(Intent)
-			  
 			  }});
 			 ad.setNegativeButton("Quit", new DialogInterface.OnClickListener() {
 			       
 			  public void onClick(DialogInterface arg0, int arg1) {
 				  // close app when the quit button is clicked
 				  ((MainActivity) getContext()).finish();
+				  
+				  
 			  }});
 			 ad.show();
 		}
 	   
-	  /**
+
+	/**
 	   * The function that convert the x coordinates to field coordinates
 	   * @param x - screen(pixels) coordinates
 	   * @return - x field coordinate 
@@ -242,4 +190,5 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 				}
 				return true;
 			}
+	   
 	}

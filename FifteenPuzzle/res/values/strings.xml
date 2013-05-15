@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name">FifteenPuzzle</string>
+	<string name="app_name">Fifteen Puzzle</string>
 	<string name="action_settings">Settings</string>
 	<string name="hello_world">Hello world!</string>
 	<string name="num_type">Numbers Puzzle</string>
 	<string name ="image_type">Image Puzzle</string>
+	<string name ="photo_type">Photo Puzzle</string>
+	
 </resources>

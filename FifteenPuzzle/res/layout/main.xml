@@ -1,49 +1,53 @@
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    >
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:keepScreenOn = "true"
+	android:orientation="vertical"
+	android:paddingLeft="16dp"
+	android:paddingRight="16dp"
+	tools:context=".BitmapFromGallery" >
 
 	<ImageView
-			android:id="@+id/imgView"
-			android:layout_width="fill_parent"
-			android:layout_weight="1" android:layout_height="wrap_content"
-			android:src="@drawable/puzzle"
-			></ImageView> 
-			
-	<Button 
-			android:layout_height="wrap_content" 
-			android:text="Image Puzzle" 
-			android:layout_width="fill_parent" 
-			android:id="@+id/buttonLoadPicture"
-			android:background="@drawable/background" 
-			
-			android:layout_weight="0" 
-			android:layout_gravity="center"></Button>
+		android:id="@+id/imgView"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="1"
+		android:src="@drawable/puzzle" >
+	</ImageView>
 
-	<Button 
-			android:layout_marginTop="10dp"
-			android:layout_height="wrap_content" 
-			android:text="Numbers Puzzle" 
-			android:layout_width="fill_parent" 
-			android:id="@+id/buttonNumbers"
-			android:background="@drawable/background" 
-			android:layout_weight="0" 
-			android:layout_gravity="center"></Button>
-	<Button 
-			android:layout_marginTop="10dp"
-			android:layout_marginBottom="20dp"
-			android:layout_height="wrap_content" 
-			android:text="Photo Image Puzzle" 
-			android:layout_width="fill_parent" 
-			android:id="@+id/buttonPhoto"
-			android:background="@drawable/background" 
-			android:layout_weight="0" 
-			android:layout_gravity="center"></Button>
-    
-	
+	<Button
+		android:id="@+id/buttonLoadPicture"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginTop="10dp"
+		android:layout_weight="0"
+		android:background="@drawable/background"
+		android:text="@string/image_type" >
+	</Button>
+
+	<Button
+		android:id="@+id/buttonNumbers"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginTop="10dp"
+		android:layout_weight="0"
+		android:background="@drawable/background"
+		android:text="@string/num_type" >
+	</Button>
+
+	<Button
+		android:id="@+id/buttonPhoto"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_gravity="center"
+		android:layout_marginBottom="20dp"
+		android:layout_marginTop="10dp"
+		android:layout_weight="0"
+		android:background="@drawable/background"
+		android:text="@string/photo_type" >
+	</Button>
+
 </LinearLayout>
