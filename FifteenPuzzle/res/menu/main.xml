@@ -1,13 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
 	 <item android:id="@+id/add_hint"
-           android:title="Add Image Hint" />
+           android:title="@string/add_hint" />
      <item android:id="@+id/cancel_hint"
-           android:title="Cancel Image Hint" />
+           android:title="@string/cancel_hint" />
      <item android:id="@+id/add_tilt"
-           android:title="Add Tilt" />
+           android:title="@string/add_tilt" />
      <item android:id="@+id/cancel_tilt"
-           android:title="Cancel Tilt" />
+           android:title="@string/cancel_tilt" />
        
 		
 </menu>

@@ -1,19 +1,8 @@
 package com.game.fifteenpuzzle;
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Point;
-import android.util.Log;
-import android.view.Display;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Toast;
 
 
 public class BmpSettings {
@@ -31,6 +20,7 @@ public class BmpSettings {
 			m_bmp = null;
 		}
 	}
+	
 	//constructor 
 	//loading icons from the res folder
 	public BmpSettings(Resources Res, int bmpID) {

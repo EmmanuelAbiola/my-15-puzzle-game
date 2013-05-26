@@ -3,25 +3,13 @@ package com.game.fifteenpuzzle;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.drawable.AnimationDrawable;
-import android.graphics.drawable.Drawable;
-import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import java.lang.Thread;
-//import android.view.View;
-//import android.view.animation.Animation;
-//import android.view.animation.BounceInterpolator;
-import android.view.animation.TranslateAnimation;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 
@@ -39,11 +27,29 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	Bitmap bmpNumbers[] = new Bitmap[17];
 	Bitmap bmpPicture;
 	int mBmpWidth;
+	int mBmpHight;
+	private int BMP_WIDTH = 140;
+    private int BMP_HIGHT = 140;
+    private int BMP_LAND_WIDTH = 160;
+    private int BMP_PORT_HIGHT = 160;
 	
 	//Constructor
 	   public GameView(Context context,Bitmap[] bmpNumbers) {
 	      super(context);
 	      mContext = context;
+	      if(bmpNumbers[0].getWidth() > bmpNumbers[0].getHeight()){// landscape
+			  mBmpHight = BMP_HIGHT;
+	    	  mBmpWidth = BMP_LAND_WIDTH;
+			}
+	      else if (bmpNumbers[0].getWidth() < bmpNumbers[0].getHeight()){// portrait
+			    mBmpHight = BMP_PORT_HIGHT;
+		    	mBmpWidth = BMP_WIDTH;
+		  }
+	      else{//equal  
+	    	  mBmpHight = BMP_HIGHT;
+		      mBmpWidth = BMP_WIDTH;
+	      }
+	    	  
 	      if(game15puzzle ==null){
 	    	  game15puzzle = new gameField();
 	      }
@@ -55,9 +61,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	   @Override
 	    public void surfaceCreated(SurfaceHolder holder) {
 	        // TODO Auto-generated method stub
-	    	mGVThread = new GameViewThread(holder,this,bmpNumbers);
-	    	mGVThread.setRunning(true);
-	    	mGVThread.start();
+	    	mGVThread = new GameViewThread(holder,this,bmpNumbers);//create the drawing thread class
+	    	mGVThread.setRunning(true);//set the running variable to true
+	    	mGVThread.start();//start the thread
 	    }
 
 	    @Override
@@ -67,7 +73,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	    	mGVThread.setRunning(false);
 	        while (retry) {
 	            try {
-	            	mGVThread.join();
+	            	mGVThread.join();// wait till all thread are finished their work
 	                retry = false;
 	            } catch (InterruptedException e) {
 	            	Log.v("Exception Occured", e.getMessage());
@@ -81,6 +87,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	    }
 	   /**
 		 * The dialog that appears at the end of the game
+		 * Congratulation !!!
 		 *  
 		 */
 		public void gameOverMsgOnScreen() {
@@ -116,7 +123,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			}
 			else
 				x = x - x_InitPosLand;
-			x = x / 140;
+			x = x / mBmpWidth;
 			return x;
 		}
 	   /**
@@ -130,7 +137,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			}
 			else
 				y = y - y_InitPosLand;
-			y = y / 140;
+			y = y / mBmpHight;
 			return y;
 		}
 	   
@@ -148,6 +155,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 			game15puzzle.moveRect(x,y);
 			movedFieldsArray = game15puzzle.getMoveRectArray();	
 			invalidate();
+			if(game15puzzle.IfGameOver()==true)
+			{
+				gameOverMsgOnScreen();
+			}
 		}
 		
 		public int[] getMovedFieldsArray() {
@@ -174,10 +185,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback{
 	   @Override
 	    public boolean onTouchEvent(MotionEvent event) {
 			 
-			int i=0;
 			
 				if (event.getAction() == MotionEvent.ACTION_DOWN) {
-					if(event.getX() >= x_InitPos && event.getY() <= y_InitPos+(4*140)){
+					if((event.getX() >= x_InitPos && event.getX() <= x_InitPos+(4*mBmpWidth)) &&
+							(event.getY() >= y_InitPos && event.getY() <= y_InitPos+(4*mBmpHight))){
 						if(game15puzzle.moveRect(ScreenToField_X((int)event.getX()),ScreenToField_Y((int) event.getY())) == true){
 						    movedFieldsArray = game15puzzle.getMoveRectArray();						
 							invalidate();

@@ -7,5 +7,8 @@
 	<string name="num_type">Numbers Puzzle</string>
 	<string name ="image_type">Image Puzzle</string>
 	<string name ="photo_type">Photo Puzzle</string>
-	
+	<string name="add_hint">Add Image Label</string>
+	<string name ="cancel_hint">Cancel Image Label</string>
+	<string name ="add_tilt">Add Tilt</string>
+	<string name ="cancel_tilt">Cancel Tilt</string>
 </resources>
