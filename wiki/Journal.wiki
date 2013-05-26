@@ -12,7 +12,7 @@ I learned how to implement shade
 ====Planned next week:====
 GAME OVER!!!!
 
-====Planned next month ☺====
+====Planned next month :-))====
 Implement the changed for different device and upload the application to the Google play.
 
 ===May 9 – May 16===
