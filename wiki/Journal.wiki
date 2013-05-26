@@ -1,6 +1,20 @@
 = Journal =
 == 15 puzzle ==
 
+===May 16 – May 23===
+
+Added the portrait/ landscape puzzle view depend in which mode the picture was taken
+Added shadow to the label of the image
+
+====Lesson learned:====
+I learned how to implement shade
+
+====Planned next week:====
+GAME OVER!!!!
+
+====Planned next month ☺====
+Implement the changed for different device and upload the application to the Google play.
+
 ===May 9 – May 16===
 
  * Added the game menu
