@@ -23,7 +23,7 @@
 			android:label="@string/app_name"
 			android:configChanges="orientation|keyboardHidden|screenSize"
 			android:screenOrientation="portrait">
-			<intent-filter android:label="BitmapFromGallery">
+			<intent-filter android:label="15 Puzzle">
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>

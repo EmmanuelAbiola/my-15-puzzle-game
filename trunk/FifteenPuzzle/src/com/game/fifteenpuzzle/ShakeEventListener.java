@@ -62,9 +62,13 @@ public class ShakeEventListener implements SensorEventListener {
     float z = event.values[2];
     
     
+    // hysteresis filter  
+    // the value on x,y is b/w 1-3 do nothing
+    // the value on x,y is -1-1 back to stable position
+    // the value on x,y is >3 or <-3 move right/lest ,top/down
     
-    //Log.d("check acclererometer", String.format(" x = %d y = %d z = %d", (int)x,(int)y,(int)z));
-   // if(afterShakeCounter >= 30){
+    // X AXIS
+    
     if(x>=3 && modeX == 0){//left
     	modeX = 1;
     	Log.d("move left", String.format(" x = %d modeX = %d", (int)x,(int)modeX));
@@ -79,7 +83,8 @@ public class ShakeEventListener implements SensorEventListener {
     	modeX = 0;
     if(x>=-1 && modeX == -1)
     	modeX = 0;
-    /////////////////
+    
+    // Y AXIS
     
     if(y>=3 && modeY == 0){//left
     	modeY = 1;
@@ -95,8 +100,7 @@ public class ShakeEventListener implements SensorEventListener {
     	modeY = 0;
     if(y>=-1 && modeY == -1)
     	modeY = 0;
-   // }else
-    //	afterShakeCounter++;
+   
     
     
     //get the difference between the measurements
@@ -117,8 +121,8 @@ public class ShakeEventListener implements SensorEventListener {
 	mLastY = y;
 	mLastZ = z;
 	
+	// only when the difference b/w x,y is really big than call shake
 	if (deltaX > deltaY || deltaY > deltaX) {
-		//afterShakeCounter = 0;
 		 mShakeListener.onShake();
 	} 
 	    

@@ -2,7 +2,6 @@ package com.game.fifteenpuzzle;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,7 +19,7 @@ import android.view.WindowManager;
 
 
 
-public class MainActivity extends Activity{//,SensorEventListener{
+public class MainActivity extends Activity{
 
 	Bitmap bmpNumbers[] = new Bitmap[17];
 	Context mContext;
@@ -41,7 +40,17 @@ public class MainActivity extends Activity{//,SensorEventListener{
     private MenuItem addTilt,cancelTilt;
     private boolean mInit = false;
     private int BMP_WIDTH = 140;
+    private int BMP_HIGHT = 140;
+    private int BMP_PIC_WIDTH = 160;
+    private int BMP_PIC_HIGHT = 160;
+    private int NUM_WIDTH = 115;
+    private int NUM_HIGHT = 115;
+    private int BG_PIC = 16;
     
+    int x=0;
+    int y=1;
+    
+    // the array of all of the numbers
 	int[] mBitmapsArray = { com.game.fifteenpuzzle.R.drawable.num16blank,com.game.fifteenpuzzle.R.drawable.num1, com.game.fifteenpuzzle.R.drawable.num2,
 			com.game.fifteenpuzzle.R.drawable.num3, com.game.fifteenpuzzle.R.drawable.num4, com.game.fifteenpuzzle.R.drawable.num5,
 			com.game.fifteenpuzzle.R.drawable.num6, com.game.fifteenpuzzle.R.drawable.num7,
@@ -57,27 +66,41 @@ public class MainActivity extends Activity{//,SensorEventListener{
 		mContext = getApplicationContext();
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		Bundle extras = getIntent().getExtras(); 
-		choppedPictures[16] =BitmapFactory.decodeResource(mContext.getResources(),mBitmapsArray[16]);
+		choppedPictures[BG_PIC] =BitmapFactory.decodeResource(mContext.getResources(),mBitmapsArray[BG_PIC]);
+		
 		
 		if(extras !=null)
 		{
+			// getting the tipe of the puzzle from the intent param
 			puzzleType = extras.getString("type");
 		}
 		
 		//load the number bmps
 		for (int j = 0; j < bmpNumbers.length; j++) {	
 			bmpNumbers[j] = BitmapFactory.decodeResource(mContext.getResources(),mBitmapsArray[j]);	
+			if(j!= BG_PIC)
+				bmpNumbers[j] = Bitmap.createScaledBitmap(bmpNumbers[j], NUM_WIDTH, NUM_HIGHT, false);
 		}
 		
-		
+		//check which game to create
 		if(puzzleType.equalsIgnoreCase("Numbers") == true)
-			gv = new GameView(this,bmpNumbers);
-		else{	
+			gv = new GameView(this,bmpNumbers);// numbers game
+		else{ // picture/photo game
 			bmpPicture = BitmapFactory.decodeFile(puzzleType.toString());
-			//create picture array
-			bmpScaled = Bitmap.createScaledBitmap(bmpPicture, BMP_WIDTH*4, BMP_WIDTH*4, false);
+			
+			//scale the image and create picture array
+			if(bmpPicture.getWidth() > bmpPicture.getHeight()){// landscape
+				bmpScaled = Bitmap.createScaledBitmap(bmpPicture, BMP_PIC_WIDTH*4, BMP_HIGHT*4, false);
+			}
+			else if(bmpPicture.getWidth() < bmpPicture.getHeight()){// portrait
+				bmpScaled = Bitmap.createScaledBitmap(bmpPicture, BMP_WIDTH*4, BMP_PIC_HIGHT*4, false);
+			}
+			else // equal
+				bmpScaled = Bitmap.createScaledBitmap(bmpPicture, BMP_WIDTH*4, BMP_HIGHT*4, false);
+			
+			//create the chopped picture
 			generateChoppedBitmap(bmpScaled); 
-			gv = new GameView(this,choppedPictures);
+			gv = new GameView(this,choppedPictures);//start the photo or image game
 		
 		}
 		setContentView(gv);
@@ -85,48 +108,60 @@ public class MainActivity extends Activity{//,SensorEventListener{
 		mSensorListener = new ShakeEventListener();   
 	 	mSensorListener.setOnShakeListener(new ShakeEventListener.OnShakeListener() {
 			
+	 		/**
+	 		 * onShake - shake the tiles on the screen
+	 		 */
 	 		public void onShake() {
 	 			mInit =true;
 				MediaPlayer shakeSound = new MediaPlayer();
 				shakeSound = MediaPlayer.create(MainActivity.this, R.raw.shake);
-				shakeSound.start();
+				shakeSound.start();// play the sound
 				gv.ShakeField();
 				try {
-					Thread.sleep(200);
+					Thread.sleep(200);// should be delays otherwise cant hear the sound
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				shakeSound.stop();
+				shakeSound.reset();
 				shakeSound.release();
 			}
 		});
+	 	
+	 	
 	 	mSensorListener.setOnTiltListener(new ShakeEventListener.OnTiltListener() {
 			
+	 		/**
+	 		 * onTiltX - tilt tile on X axis
+	 		 */
 			public void onTiltX(int modeX) {
 				int emptyPos[] = new int[2];
 				Log.d("MOVE", String.format(" modeX = %d", (int)modeX));
 				emptyPos = gv.getEmptyPosition();
 				if(tilt.contentEquals("cancel") == false && mInit == true){  
 					if(modeX == -1){
-						if(emptyPos[0]-1 != -1){
-							gv.MoveField(emptyPos[0]-1,emptyPos[1]);
+						if(emptyPos[x]-1 != -1){
+							gv.MoveField(emptyPos[x]-1,emptyPos[y]);
 						}
 					}
 	    			if(modeX == 1)
-	    				gv.MoveField(emptyPos[0]+1,emptyPos[1]);
+	    				gv.MoveField(emptyPos[x]+1,emptyPos[y]);
 				}
 			}
+			/**
+	 		 * onTiltY - tilt tile on Y axis
+	 		 */
 			public void onTiltY(int modeY) {
 				int emptyPos[] = new int[2];
 				Log.d("MOVE", String.format(" modeY = %d", (int)modeY));
 				emptyPos = gv.getEmptyPosition();
 				if(tilt.contentEquals("cancel") == false && mInit == true){  
 					if(modeY == -1)
-	    				gv.MoveField(emptyPos[0],emptyPos[1]+1);
+	    				gv.MoveField(emptyPos[x],emptyPos[y]+1);
 	    			if(modeY == 1){
-	    				if(emptyPos[1]-1 != -1){
-	    					gv.MoveField(emptyPos[0],emptyPos[1]-1);
+	    				if(emptyPos[y]-1 != -1){
+	    					gv.MoveField(emptyPos[x],emptyPos[y]-1);
 	    				}
 	    			}
 				}
@@ -136,12 +171,17 @@ public class MainActivity extends Activity{//,SensorEventListener{
 	 	
 	 	
 	}
-	
+	/**
+    * generateChoppedBitmap - function generate small images from the given bitmap
+    * @param bmp - the picture to generate
+	*/
 	 private void generateChoppedBitmap(Bitmap bmp) {
 	        
 		 	
 		 	BitmapFactory.Options opts = new BitmapFactory.Options();
 	        opts.inScaled = false;
+	        opts.inJustDecodeBounds = true;
+	        
 	        final int width = bmp.getWidth();
 	        final int height = bmp.getHeight();
 
@@ -152,7 +192,7 @@ public class MainActivity extends Activity{//,SensorEventListener{
 	            for (int col = 0; col < 4; col++) {
 	                int startx = pixelByCol * col;
 	                int starty = pixelByRow * row;
-	                if(i<16)
+	                if(i<BG_PIC)
 	                	choppedPictures[i++] = Bitmap.createBitmap(bmp, startx, starty, pixelByCol, pixelByRow);
 	                else{
 	                	Bitmap bitmap = Bitmap.createBitmap(pixelByCol, pixelByRow, Bitmap.Config.ARGB_8888);
@@ -163,15 +203,23 @@ public class MainActivity extends Activity{//,SensorEventListener{
 	        }
 	  }
 	
+	 /**
+	 * AddBitmapHint - create the label as a number at the corner of the tile
+	 * @param bmp - the picture to generate
+	 * @param i = the value to draw
+	 * @param add_canel - action 
+	*/
 	 private void AddBitmapHint(Bitmap bmp,int i,boolean add_cancel) {
 		 Paint paint = new Paint();
 		 Canvas c = new Canvas (choppedPictures[i]); 
-         paint.setTextSize(35);
+		 paint.setTextSize(35);
          paint.setColor(Color.WHITE);
          paint.setTypeface(Typeface.DEFAULT_BOLD); 
+         paint.setShadowLayer(4, 1, 7, Color.BLACK);
          if(add_cancel==true){
-			 if(hint.contentEquals("add") == true){     
-	            c.drawText(String.valueOf(i),7,30,paint);
+			 if(hint.contentEquals("add") == true){
+				c.drawText(String.valueOf(i),7,30,paint);
+				
 			 }
          }
 	 }
@@ -239,6 +287,28 @@ public class MainActivity extends Activity{//,SensorEventListener{
 	    super.onStop();
 	  }
 	  
+	  @Override
+	    protected void onDestroy() {
+		
+		//recycle all bmps
+			for (int j = 0; j < bmpNumbers.length; j++) {	
+				bmpNumbers[j].recycle();// clear the bmp at the end
+				bmpNumbers[j]= null;
+				if(puzzleType.equalsIgnoreCase("Numbers") == false){
+					choppedPictures[j].recycle();// clear the bmp at the end
+					choppedPictures[j]= null;
+				}
+			}
+			if(puzzleType.equalsIgnoreCase("Numbers") == false){
+				bmpPicture.recycle();// clear the bmp at the end
+				bmpPicture =null;
+				bmpScaled.recycle();
+				bmpScaled =null;
+				
+			}  
+	        super.onDestroy();
+	        Log.d(getClass().getName(), "onDestroy() called");
+	    }
 	  
 	  
 }//end of class

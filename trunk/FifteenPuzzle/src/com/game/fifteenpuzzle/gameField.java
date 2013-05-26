@@ -72,32 +72,36 @@ public int[] getFieldPosition(int Num) {
 	return position;
 }
 
+/**
+ * The function returns the empty cell on y axis 
+ */
 public int getEmptyY() {
 
-	int emptyX = -1, emptyY = -1;//empty field coordinates
+	int emptyY = -1;//empty field coordinates
 	
 	//look for an empty field position
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (this.field[i][j] == 0) {
-					emptyX = i;
 					emptyY = j;
 				}
 			}
 		}
 	return emptyY;
 }
-
+/**
+ * The function returns the empty cell on x axis 
+ */
 public int getEmptyX() {
 
-	int emptyX = -1, emptyY = -1;//empty field coordinates
+	int emptyX = -1;//empty field coordinates
 	
 	//look for an empty field position
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (this.field[i][j] == 0) {
 					emptyX = i;
-					emptyY = j;
+					
 				}
 			}
 		}
@@ -105,6 +109,12 @@ public int getEmptyX() {
 }
 
 /*according to the number position on the field move it*/
+/**
+ * The function move the tile in needed position if it is possible
+ * @param x
+ * @param y
+ * @return true/false 
+ */
 public boolean moveRect(int x, int y) {
 
 	int emptyX = -1, emptyY = -1;//empty field coordinates
@@ -170,12 +180,20 @@ public boolean moveRect(int x, int y) {
 	}
 	//return the result
 	return result;
-}	
+}
+/**
+ * The function return the moved tiles array
+ * @return  moveRectArray
+ */
 public int[] getMoveRectArray() {
 	   return moveRectArray;
 }
 
 //check the game is over
+/**
+ * The function checks if the game is over
+ * @return  true/false
+ */
 public boolean IfGameOver()
 {	
 	int gameOverField[][] = new int[4][4];	
