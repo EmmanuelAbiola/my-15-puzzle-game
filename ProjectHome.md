@@ -1,0 +1,1 @@
+The 15-puzzle is a sliding puzzle that consists of 4x4 frame of numbered square tiles in random order with one tile missing. The objective of the puzzle is to place the tiles in order by sliding a tile at a time to the empty space at that move.
